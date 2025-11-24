@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROTOCOLO DARK // SINGULARITY</title>
+    <meta name="description" content="O sistema foi feito para você falhar. Nós hackeamos o sistema.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'tech-cyan': '#00AEEF',
+                        'value-gold': '#FFD700',
+                        'dark-bg': '#050505',
+                        'panel-bg': 'rgba(20, 20, 20, 0.6)',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                        impact: ['Impact', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+
+    <style>
+        /* --- GLOBAL & UTILS --- */
+        body {
+            background-color: #050505;
+            color: #e5e5e5;
+            overflow-x: hidden;
+            /* Prevent horizontal scroll */
+            cursor: none;
+            /* Hide default cursor */
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00AEEF;
+        }
+
+        /* --- CINEMATIC ENGINE --- */
+        /* Noise Overlay */
+        #noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Custom Cursor */
+        #cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+        }
+
+        #cursor.active {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(0, 174, 239, 0.2);
+            border-radius: 50%;
+            border: 1px solid #00AEEF;
+        }
+
+        /* Crosshair shape */
+        #cursor::before,
+        #cursor::after {
+            content: '';
+            position: absolute;
+            background: #00AEEF;
+            transition: all 0.3s;
+        }
+
+        #cursor::before {
+            top: 9px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+        }
+
+        #cursor::after {
+            top: 0;
+            left: 9px;
+            width: 2px;
+            height: 100%;
+        }
+
+        #cursor.active::before,
+        #cursor.active::after {
+            opacity: 0;
+        }
+
+        /* Spotlight */
+        #spotlight {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+            background: radial-gradient(600px circle at var(--x) var(--y), rgba(0, 174, 239, 0.03), transparent 40%);
+        }
+
+        /* --- ANIMATIONS & EFFECTS --- */
+        /* Glitch Effect for "REFÉM" */
+        .glitch-text {
+            position: relative;
+            color: #fff;
+        }
+
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #050505;
+        }
+
+        .glitch-text::before {
+            left: 2px;
+            text-shadow: -1px 0 #ff00c1;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+
+        .glitch-text::after {
+            left: -2px;
+            text-shadow: -1px 0 #00fff9;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% {
+                clip: rect(36px, 9999px, 9px, 0);
+            }
+
+            5% {
+                clip: rect(68px, 9999px, 99px, 0);
+            }
+
+            10% {
+                clip: rect(11px, 9999px, 88px, 0);
+            }
+
+            15% {
+                clip: rect(82px, 9999px, 2px, 0);
+            }
+
+            20% {
+                clip: rect(56px, 9999px, 45px, 0);
+            }
+
+            25% {
+                clip: rect(12px, 9999px, 7px, 0);
+            }
+
+            30% {
+                clip: rect(34px, 9999px, 19px, 0);
+            }
+
+            35% {
+                clip: rect(89px, 9999px, 23px, 0);
+            }
+
+            40% {
+                clip: rect(2px, 9999px, 67px, 0);
+            }
+
+            45% {
+                clip: rect(55px, 9999px, 12px, 0);
+            }
+
+            50% {
+                clip: rect(9px, 9999px, 98px, 0);
+            }
+
+            55% {
+                clip: rect(23px, 9999px, 45px, 0);
+            }
+
+            60% {
+                clip: rect(67px, 9999px, 34px, 0);
+            }
+
+            65% {
+                clip: rect(12px, 9999px, 78px, 0);
+            }
+
+            70% {
+                clip: rect(89px, 9999px, 12px, 0);
+            }
+
+            75% {
+                clip: rect(34px, 9999px, 56px, 0);
+            }
+
+            80% {
+                clip: rect(67px, 9999px, 23px, 0);
+            }
+
+            85% {
+                clip: rect(12px, 9999px, 89px, 0);
+            }
+
+            90% {
+                clip: rect(45px, 9999px, 34px, 0);
+            }
+
+            95% {
+                clip: rect(78px, 9999px, 12px, 0);
+            }
+
+            100% {
+                clip: rect(23px, 9999px, 67px, 0);
+            }
+        }
+
+        @keyframes glitch-anim2 {
+            0% {
+                clip: rect(12px, 9999px, 89px, 0);
+            }
+
+            20% {
+                clip: rect(67px, 9999px, 23px, 0);
+            }
+
+            40% {
+                clip: rect(34px, 9999px, 56px, 0);
+            }
+
+            60% {
+                clip: rect(89px, 9999px, 12px, 0);
+            }
+
+            80% {
+                clip: rect(23px, 9999px, 45px, 0);
+            }
+
+            100% {
+                clip: rect(56px, 9999px, 78px, 0);
+            }
+        }
+
+        /* Molten Gold Text */
+        .molten-gold {
+            color: #FFD700;
+            text-shadow:
+                0 0 4px #FFD700,
+                0 0 10px #FFA500,
+                0 0 20px #FF4500;
+            animation: molten-flow 3s infinite alternate;
+        }
+
+        @keyframes molten-flow {
+            0% {
+                text-shadow: 0 0 4px #FFD700, 0 0 10px #FFA500, 0 0 20px #FF4500;
+            }
+
+            100% {
+                text-shadow: 0 0 8px #FFD700, 0 0 15px #FF8C00, 0 0 30px #FF0000;
+            }
+        }
+
+        /* Liquid Button */
+        .btn-liquid {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .btn-liquid::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background: #00AEEF;
+            transition: height 0.4s ease-in-out;
+            z-index: -1;
+            border-radius: 0.25rem;
+            /* Match button rounded */
+        }
+
+        .btn-liquid:hover::before {
+            height: 100%;
+        }
+
+        .btn-liquid:hover {
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 174, 239, 0.6);
+        }
+
+        /* Hero Image Mask & Glow */
+        .hero-mask {
+            mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+        }
+
+        .hero-glow {
+            filter: drop-shadow(0 0 20px rgba(0, 174, 239, 0.3));
+            animation: breathing-glow 4s ease-in-out infinite;
+        }
+
+        /* Mix Blend Mode Fix */
+        .hero-blend {
+            mix-blend-mode: lighten;
+        }
+
+        @keyframes breathing-glow {
+
+            0%,
+            100% {
+                filter: drop-shadow(0 0 20px rgba(0, 174, 239, 0.3));
+            }
+
+            50% {
+                filter: drop-shadow(0 0 40px rgba(0, 174, 239, 0.6));
+            }
+        }
+
+        /* Preloader */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .terminal-text {
+            font-family: 'JetBrains Mono', monospace;
+            color: #00ff00;
+            font-size: 1.2rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body class="antialiased selection:bg-tech-cyan selection:text-black">
+
+    <!-- CINEMATIC LAYERS -->
+    <div id="noise-overlay"></div>
+    <div id="cursor"></div>
+    <div id="spotlight"></div>
+    <div id="canvas-container" class="fixed top-0 left-0 w-full h-full -z-10"></div>
+
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <div class="terminal-text" id="boot-text"></div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="relative z-10">
+
+        <!-- HERO SECTION -->
+        <!-- Added pt-32 for mobile spacing and gap-y-8 for vertical gap -->
+        <section id="hero"
+            class="min-h-screen flex flex-col lg:flex-row items-center justify-center px-6 lg:px-20 pt-32 lg:pt-0 relative overflow-hidden gap-y-8 lg:gap-y-0">
+
+            <!-- Text Content (Mobile: Top, Desktop: Left) -->
+            <div class="w-full lg:w-1/2 z-20 order-1 lg:order-1 flex flex-col items-start mb-10 lg:mb-0">
+                <div class="overflow-hidden mb-4">
+                    <h2 class="text-tech-cyan font-mono text-sm tracking-[0.3em] uppercase hero-reveal">Acesso Restrito
+                        // Nível 5</h2>
+                </div>
+                <div class="overflow-hidden mb-6">
+                    <h1 class="font-impact text-5xl lg:text-8xl uppercase leading-tight hero-reveal">
+                        VOCÊ VIROU O <br>
+                        <span class="glitch-text text-red-600" data-text="REFÉM">REFÉM</span> <br>
+                        DO ALGORITMO.
+                    </h1>
+                </div>
+                <div class="overflow-hidden mb-8">
+                    <p class="text-gray-400 text-lg lg:text-xl max-w-md hero-reveal">
+                        O sistema foi desenhado para manter você pobre, distraído e obediente. É hora de cortar as
+                        cordas.
+                    </p>
+                </div>
+                <div class="overflow-hidden">
+                    <a href="https://pay.cakto.com.br/xxfrxiz_663570"
+                        class="magnetic-btn btn-liquid inline-block px-8 py-4 border border-tech-cyan text-tech-cyan font-bold tracking-widest uppercase rounded hero-reveal">
+                        Iniciar Protocolo
+                    </a>
+                </div>
+            </div>
+
+            <!-- Image Content (Mobile: Bottom, Desktop: Right) -->
+            <div
+                class="w-full lg:w-1/2 h-[50vh] lg:h-screen relative order-2 lg:order-2 flex items-end justify-center bg-transparent">
+                <!-- Trust Card -->
+                <div
+                    class="absolute top-1/4 right-4 lg:right-20 z-30 glass-panel p-4 rounded border border-white/10 backdrop-blur-md bg-black/40 animate-float hero-reveal">
+                    <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">Faturamento Verificado</div>
+                    <div class="text-2xl font-mono text-green-400 font-bold">R$ <span id="counter">0</span></div>
+                </div>
+
+                <!-- Hero Image -->
+                <!-- Added hero-blend class for mix-blend-mode: lighten -->
+                <img src="./assets/hero.png" alt="Mentor"
+                    class="hero-glow hero-mask hero-blend object-contain h-full w-auto max-w-full relative z-10"
+                    loading="eager">
+            </div>
+        </section>
+
+        <!-- AGITATION SECTION -->
+        <section id="agitation" class="py-24 px-6 lg:px-20 relative">
+            <div class="max-w-7xl mx-auto">
+                <!-- Terminal Typewriter -->
+                <div class="mb-20 text-center">
+                    <div
+                        class="inline-block bg-black/80 border border-green-500/30 p-6 rounded font-mono text-green-500 text-lg lg:text-2xl shadow-[0_0_20px_rgba(0,255,0,0.1)] min-h-[100px] flex items-center justify-center">
+                        <span><span id="typewriter"></span><span class="animate-pulse">_</span></span>
+                    </div>
+                </div>
+
+                <!-- Split Cards -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-0">
+                    <!-- Pain Card -->
+                    <div
+                        class="agitation-card p-10 border border-white/5 bg-white/5 backdrop-blur-sm rounded-l-xl relative overflow-hidden group">
+                        <div
+                            class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')] opacity-20">
+                        </div>
+                        <h3 class="text-3xl font-impact text-gray-500 mb-4 group-hover:text-gray-400 transition-colors">
+                            SUA REALIDADE</h3>
+                        <ul class="space-y-4 text-gray-400 font-mono text-sm">
+                            <li class="flex items-center"><span class="text-red-500 mr-2">✖</span> Postar conteúdo sem
+                                estratégia</li>
+                            <li class="flex items-center"><span class="text-red-500 mr-2">✖</span> Dançar para o
+                                algoritmo</li>
+                            <li class="flex items-center"><span class="text-red-500 mr-2">✖</span> Fracassar em escalar
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Desire Card -->
+                    <div
+                        class="agitation-card p-10 border border-green-500/30 bg-green-900/10 backdrop-blur-sm rounded-r-xl relative overflow-hidden shadow-[0_0_30px_rgba(0,255,0,0.05)] hover:shadow-[0_0_50px_rgba(0,255,0,0.2)] transition-all duration-500">
+                        <h3 class="text-3xl font-impact text-white mb-4">O PROTOCOLO</h3>
+                        <ul class="space-y-4 text-green-400 font-mono text-sm">
+                            <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Sistema Anti-Falha
+                            </li>
+                            <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Tráfego Dominante
+                            </li>
+                            <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Lucro Previsível
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ARSENAL SECTION (MODULES) -->
+        <section id="arsenal" class="py-24 px-6 lg:px-20 relative">
+            <div class="text-center mb-16">
+                <h2 class="font-impact text-4xl lg:text-6xl uppercase text-white mb-4">O Arsenal</h2>
+                <p class="text-tech-cyan font-mono tracking-widest">MÓDULOS DE COMBATE DIGITAL</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+                <!-- Module 1 -->
+                <div class="tilt-card relative h-[400px] rounded-lg overflow-hidden border border-white/10 group cursor-pointer"
+                    data-tilt>
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                        style="background-image: url('./assets/1.jpg');"></div>
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-90 group-hover:opacity-70 transition-opacity">
+                    </div>
+                    <div
+                        class="absolute bottom-0 left-0 p-6 w-full border-t border-tech-cyan/0 group-hover:border-tech-cyan/100 transition-colors duration-300 z-10">
+                        <div class="text-tech-cyan font-mono text-xs mb-2">MÓDULO 01</div>
+                        <h3 class="font-impact text-2xl text-white">O BRIEFING</h3>
+                    </div>
+                </div>
+                <!-- Module 2 -->
+                <div class="tilt-card relative h-[400px] rounded-lg overflow-hidden border border-white/10 group cursor-pointer"
+                    data-tilt>
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                        style="background-image: url('./assets/2.jpg');"></div>
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-90 group-hover:opacity-70 transition-opacity">
+                    </div>
+                    <div
+                        class="absolute bottom-0 left-0 p-6 w-full border-t border-tech-cyan/0 group-hover:border-tech-cyan/100 transition-colors duration-300 z-10">
+                        <div class="text-tech-cyan font-mono text-xs mb-2">MÓDULO 02</div>
+                        <h3 class="font-impact text-2xl text-white">O ARSENAL</h3>
+                    </div>
+                </div>
+                <!-- Module 3 -->
+                <div class="tilt-card relative h-[400px] rounded-lg overflow-hidden border border-white/10 group cursor-pointer"
+                    data-tilt>
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                        style="background-image: url('./assets/3.jpg');"></div>
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-90 group-hover:opacity-70 transition-opacity">
+                    </div>
+                    <div
+                        class="absolute bottom-0 left-0 p-6 w-full border-t border-tech-cyan/0 group-hover:border-tech-cyan/100 transition-colors duration-300 z-10">
+                        <div class="text-tech-cyan font-mono text-xs mb-2">MÓDULO 03</div>
+                        <h3 class="font-impact text-2xl text-white">O MECANISMO</h3>
+                    </div>
+                </div>
+                <!-- Module 4 -->
+                <div class="tilt-card relative h-[400px] rounded-lg overflow-hidden border border-white/10 group cursor-pointer"
+                    data-tilt>
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                        style="background-image: url('./assets/4.jpg');"></div>
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-90 group-hover:opacity-70 transition-opacity">
+                    </div>
+                    <div
+                        class="absolute bottom-0 left-0 p-6 w-full border-t border-tech-cyan/0 group-hover:border-tech-cyan/100 transition-colors duration-300 z-10">
+                        <div class="text-tech-cyan font-mono text-xs mb-2">BÔNUS</div>
+                        <h3 class="font-impact text-2xl text-white">FERRAMENTAS IA</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OFFER SECTION (VAULT) -->
+        <section id="offer" class="py-32 px-6 lg:px-20 relative flex justify-center">
+            <div
+                class="relative w-full max-w-3xl bg-[#111] rounded-xl border-2 border-[#333] p-8 lg:p-16 overflow-hidden shadow-2xl">
+                <!-- Vault Bolts -->
+                <div
+                    class="absolute top-4 left-4 w-4 h-4 rounded-full bg-gray-700 shadow-[inset_1px_1px_2px_rgba(0,0,0,0.5)]">
+                </div>
+                <div
+                    class="absolute top-4 right-4 w-4 h-4 rounded-full bg-gray-700 shadow-[inset_1px_1px_2px_rgba(0,0,0,0.5)]">
+                </div>
+                <div
+                    class="absolute bottom-4 left-4 w-4 h-4 rounded-full bg-gray-700 shadow-[inset_1px_1px_2px_rgba(0,0,0,0.5)]">
+                </div>
+                <div
+                    class="absolute bottom-4 right-4 w-4 h-4 rounded-full bg-gray-700 shadow-[inset_1px_1px_2px_rgba(0,0,0,0.5)]">
+                </div>
+
+                <!-- Content -->
+                <div class="text-center relative z-10">
+                    <h2 class="font-impact text-3xl lg:text-5xl uppercase text-white mb-2">ACESSO AO COFRE</h2>
+                    <p class="text-gray-500 mb-8 font-mono text-sm">OFERTA POR TEMPO LIMITADO</p>
+
+                    <div class="mb-8">
+                        <div class="text-gray-500 line-through text-xl font-mono">DE R$ 147,00</div>
+                        <div class="molten-gold font-impact text-6xl lg:text-8xl">R$ 47,00</div>
+                    </div>
+
+                    <a href="https://pay.cakto.com.br/xxfrxiz_663570"
+                        class="magnetic-btn btn-liquid block w-full py-6 text-xl font-bold uppercase tracking-widest border border-tech-cyan text-tech-cyan rounded mb-6">
+                        ATIVAR ACESSO IMEDIATO
+                    </a>
+
+                    <div class="flex justify-center gap-6 text-gray-500 text-xs font-mono">
+                        <div class="flex items-center"><svg class="w-4 h-4 mr-1" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                                <path fill-rule="evenodd"
+                                    d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                                    clip-rule="evenodd" />
+                            </svg> 7-Day Guarantee</div>
+                        <div class="flex items-center"><svg class="w-4 h-4 mr-1" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                                    clip-rule="evenodd" />
+                            </svg> SSL Secure</div>
+                        <div class="flex items-center"><svg class="w-4 h-4 mr-1" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
+                                    clip-rule="evenodd" />
+                            </svg> Instant Access</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="py-10 text-center text-gray-600 text-xs font-mono">
+            <p>&copy; 2025 PROTOCOLO DARK. TODOS OS DIREITOS RESERVADOS.</p>
+        </footer>
+
+    </main>
+
+    <!-- STICKY CTA (MOBILE) -->
+    <div id="sticky-cta"
+        class="fixed bottom-0 left-0 w-full bg-black/90 backdrop-blur-md border-t border-tech-cyan/30 p-4 z-50 transform translate-y-full transition-transform duration-500 lg:hidden">
+        <a href="https://pay.cakto.com.br/xxfrxiz_663570"
+            class="btn-liquid block w-full py-4 text-center font-bold uppercase tracking-widest border border-tech-cyan text-tech-cyan rounded">
+            ATIVAR ACESSO - R$ 47
+        </a>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        // --- 1. BOOT SEQUENCE ---
+        const bootText = document.getElementById('boot-text');
+        const preloader = document.getElementById('preloader');
+
+        const tlBoot = gsap.timeline({
+            onComplete: () => {
+                gsap.to(preloader, {
+                    yPercent: -100,
+                    duration: 1.5,
+                    ease: "power4.inOut",
+                    onComplete: initExperience
+                });
+            }
+        });
+
+        tlBoot.to(bootText, { duration: 1, text: "> CONNECTING TO SECURE SERVER...", ease: "none" })
+            .to(bootText, { duration: 0.5, text: "> DECRYPTING PROTOCOL...", ease: "none", delay: 0.5 })
+            .to(bootText, { duration: 0.5, text: "> ACCESS GRANTED.", ease: "none", delay: 0.5 })
+            .to(bootText, { duration: 0.5, opacity: 0, repeat: 3, yoyo: true });
+
+
+        // --- 2. MAIN EXPERIENCE INIT ---
+        function initExperience() {
+            // Initialize ScrollTrigger Animations
+            initScrollAnimations();
+            // Start Counter
+            startCounter();
+        }
+
+        // --- 3. THREE.JS BACKGROUND ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        // Particles
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 1500;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for (let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 15; // Spread
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+        // Material with Depth of Field simulation (size attenuation)
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.02,
+            color: 0x00AEEF,
+            transparent: true,
+            opacity: 0.8,
+            sizeAttenuation: true
+        });
+
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+
+        camera.position.z = 3;
+
+        // Mouse Interaction (Repulsion)
+        let mouseX = 0;
+        let mouseY = 0;
+
+        document.addEventListener('mousemove', (event) => {
+            mouseX = event.clientX / window.innerWidth - 0.5;
+            mouseY = event.clientY / window.innerHeight - 0.5;
+
+            // Spotlight Update
+            const spotlight = document.getElementById('spotlight');
+            spotlight.style.setProperty('--x', `${event.clientX}px`);
+            spotlight.style.setProperty('--y', `${event.clientY}px`);
+        });
+
+        function animateParticles() {
+            requestAnimationFrame(animateParticles);
+
+            // Gentle rotation
+            particlesMesh.rotation.y += 0.001;
+            particlesMesh.rotation.x += 0.0005;
+
+            // Mouse repulsion effect (simple camera move for parallax)
+            camera.position.x += (mouseX * 0.5 - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY * 0.5 - camera.position.y) * 0.05;
+
+            renderer.render(scene, camera);
+        }
+        animateParticles();
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+
+        // --- 4. CUSTOM CURSOR & MAGNETIC BUTTONS ---
+        const cursor = document.getElementById('cursor');
+        const magneticBtns = document.querySelectorAll('.magnetic-btn');
+        const interactiveElements = document.querySelectorAll('a, button, .tilt-card');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+
+            // Magnetic Button Logic
+            magneticBtns.forEach(btn => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+
+                // Distance check
+                const dist = Math.sqrt(x * x + y * y);
+
+                if (dist < 100) {
+                    gsap.to(btn, {
+                        x: x * 0.2,
+                        y: y * 0.2,
+                        duration: 0.3,
+                        ease: "power2.out"
+                    });
+                } else {
+                    gsap.to(btn, { x: 0, y: 0, duration: 0.3 });
+                }
+            });
+        });
+
+        // Cursor States
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('active'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
+        });
+
+
+        // --- 5. GSAP SCROLL ANIMATIONS ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        function initScrollAnimations() {
+            // Hero Reveal
+            gsap.from(".hero-reveal", {
+                y: 100,
+                opacity: 0,
+                duration: 1.2,
+                stagger: 0.1,
+                ease: "power4.out"
+            });
+
+            // Agitation Background Darken
+            ScrollTrigger.create({
+                trigger: "#agitation",
+                start: "top center",
+                end: "bottom center",
+                onEnter: () => gsap.to("body", { backgroundColor: "#000000", duration: 1 }),
+                onLeaveBack: () => gsap.to("body", { backgroundColor: "#050505", duration: 1 })
+            });
+
+            // Typewriter Effect
+            gsap.to("#typewriter", {
+                text: {
+                    value: "Enquanto você busca likes, a elite busca ROI. O sistema foi feito para você falhar. Nós hackeamos o sistema.",
+                    delimiter: ""
+                },
+                duration: 8,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "#agitation",
+                    start: "top 80%"
+                }
+            });
+
+            // Cards Stagger
+            gsap.from(".agitation-card", {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.2,
+                scrollTrigger: {
+                    trigger: "#agitation",
+                    start: "top 60%"
+                }
+            });
+
+            // Sticky CTA Reveal
+            ScrollTrigger.create({
+                trigger: "#hero",
+                start: "bottom top",
+                onEnter: () => gsap.to("#sticky-cta", { y: 0, duration: 0.5 }),
+                onLeaveBack: () => gsap.to("#sticky-cta", { y: "100%", duration: 0.5 })
+            });
+        }
+
+        // --- 6. VANILLA TILT ---
+        VanillaTilt.init(document.querySelectorAll(".tilt-card"), {
+            max: 15,
+            speed: 400,
+            glare: true,
+            "max-glare": 0.5,
+            reverse: true
+        });
+
+        // --- 7. COUNTER ANIMATION ---
+        function startCounter() {
+            const counterObj = { val: 0 };
+            gsap.to(counterObj, {
+                val: 350000,
+                duration: 2,
+                ease: "power2.out",
+                onUpdate: () => {
+                    document.getElementById("counter").innerText = Math.floor(counterObj.val).toLocaleString('pt-BR');
+                }
+            });
+        }
+
+    </script>
+</body>
+
+</html>
