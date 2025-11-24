@@ -4,47 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PROTOCOLO DARK // SINGULARITY</title>
-    <meta name="description" content="O sistema foi feito para você falhar. Nós hackeamos o sistema.">
+    <title>PROTOCOLO DARK // OPERAÇÃO UNDERGROUND</title>
+    <meta name="description" content="O sistema algorítmico proibido que gera R$ 350k+ sem exposição. Acesso restrito.">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
-    <!-- Tailwind CSS -->
+    <!-- TailwindCSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        'void-bg': '#020202',
-                        'glass-border': 'rgba(255, 255, 255, 0.08)',
-                        'glass-bg': 'rgba(255, 255, 255, 0.02)',
-                        'accent-cyan': '#00AEEF',
-                        'accent-violet': '#7C3AED',
-                        'value-gold': '#FFD700',
-                    },
                     fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
                         mono: ['JetBrains Mono', 'monospace'],
                     },
-                    backgroundImage: {
-                        'radial-glow': 'radial-gradient(circle at center, var(--tw-gradient-from) 0%, transparent 70%)',
+                    colors: {
+                        void: '#000000',
+                        'void-light': '#0a0a0a',
+                        glass: 'rgba(255, 255, 255, 0.02)',
+                        'glass-border': 'rgba(255, 255, 255, 0.08)',
+                        'cyber-cyan': '#00FFFF',
+                        'cyber-violet': '#8B5CF6',
+                        'gold': '#FFD700',
+                        'gold-dark': '#FFA500',
                     },
-                    animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-20px)' },
-                        }
-                    }
                 }
             }
         }
@@ -57,217 +46,455 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
 
     <style>
-        /* --- GLOBAL & UTILS --- */
-        body {
-            background-color: #020202;
-            color: #e5e5e5;
-            overflow-x: hidden;
-            cursor: default;
-            /* Reverted to default for better UX, or keep custom if strictly required */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        /* Smooth Scrollbar */
+        body {
+            background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Scrollbar */
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 6px;
         }
 
         ::-webkit-scrollbar-track {
-            background: #020202;
+            background: #000;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #333;
-            border-radius: 4px;
+            background: #222;
+            border-radius: 3px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #555;
+            background: #444;
         }
 
-        /* --- AESTHETICS: TRIGGER SEND / LINEAR --- */
-
-        /* Ambient Light */
-        .ambient-light {
+        /* Aurora Background */
+        .aurora-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            pointer-events: none;
             z-index: 0;
+            pointer-events: none;
             background:
-                radial-gradient(circle at 15% 50%, rgba(0, 174, 239, 0.03), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(124, 58, 237, 0.03), transparent 25%);
+                conic-gradient(from 180deg at 50% 50%,
+                    rgba(0, 255, 255, 0.03) 0deg,
+                    rgba(139, 92, 246, 0.03) 120deg,
+                    rgba(255, 215, 0, 0.03) 240deg,
+                    rgba(0, 255, 255, 0.03) 360deg);
+            animation: aurora-drift 20s linear infinite;
         }
 
-        /* Bento Grid Card */
-        .bento-card {
+        @keyframes aurora-drift {
+            0% {
+                transform: rotate(0deg) scale(1);
+            }
+
+            50% {
+                transform: rotate(180deg) scale(1.1);
+            }
+
+            100% {
+                transform: rotate(360deg) scale(1);
+            }
+        }
+
+        /* Glass Card */
+        .glass-card {
             background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 1.5rem;
-            /* rounded-3xl */
-            backdrop-filter: blur(10px);
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .bento-card:hover {
-            border-color: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-            transform: translateY(-2px);
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            transform: translateY(-4px);
         }
 
-        /* Inner Glow Button */
-        .btn-glow {
-            position: relative;
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            overflow: hidden;
-        }
-
-        .btn-glow:hover {
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
-            border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 15px rgba(0, 174, 239, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-
-        /* Text Gradient */
-        .text-gradient {
+        /* Text Gradients */
+        .text-gradient-white {
             background: linear-gradient(to bottom, #ffffff, #888888);
             -webkit-background-clip: text;
             background-clip: text;
-            color: transparent;
+            -webkit-text-fill-color: transparent;
         }
 
         .text-gradient-gold {
-            background: linear-gradient(to right, #FFD700, #FFA500);
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
             -webkit-background-clip: text;
             background-clip: text;
-            color: transparent;
+            -webkit-text-fill-color: transparent;
         }
 
-        /* Hero Image Mask */
-        .hero-mask-gradient {
-            mask-image: linear-gradient(to top, black 80%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to top, black 80%, transparent 100%);
+        .text-gradient-cyan {
+            background: linear-gradient(135deg, #00FFFF 0%, #8B5CF6 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        /* Floating Dock CTA */
-        .floating-dock {
-            background: rgba(10, 10, 10, 0.8);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+        /* Radar Scan Animation */
+        .radar-scan {
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            pointer-events: none;
+            z-index: 5;
         }
 
-        /* Shine Animation */
-        .shine-effect {
+        .radar-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid rgba(0, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: radar-pulse 4s ease-out infinite;
+        }
+
+        .radar-ring:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .radar-ring:nth-child(2) {
+            animation-delay: 1s;
+        }
+
+        .radar-ring:nth-child(3) {
+            animation-delay: 2s;
+        }
+
+        .radar-ring:nth-child(4) {
+            animation-delay: 3s;
+        }
+
+        @keyframes radar-pulse {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+            }
+
+            100% {
+                width: 600px;
+                height: 600px;
+                opacity: 0;
+            }
+        }
+
+        /* Floating Animation */
+        .float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Border Beam Animation */
+        .border-beam {
             position: relative;
             overflow: hidden;
         }
 
-        .shine-effect::after {
+        .border-beam::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #FFD700, transparent);
+            animation: beam-move 3s linear infinite;
+        }
+
+        @keyframes beam-move {
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        /* Shine Sweep */
+        .shine-sweep {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shine-sweep::after {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 50%;
             height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transform: skewX(-20deg);
-            animation: shine 3s infinite;
+            animation: shine 4s infinite;
         }
 
         @keyframes shine {
-            0% {
+
+            0%,
+            90% {
                 left: -100%;
             }
 
-            20% {
-                left: 200%;
-            }
-
             100% {
-                left: 200%;
+                left: 150%;
             }
         }
 
-        /* Performance */
-        .will-change-transform {
-            will-change: transform;
+        /* Glitch Effect */
+        .glitch {
+            animation: glitch 8s infinite;
+        }
+
+        @keyframes glitch {
+
+            0%,
+            90%,
+            100% {
+                transform: translate(0);
+                opacity: 1;
+            }
+
+            91% {
+                transform: translate(-2px, 2px);
+                opacity: 0.8;
+            }
+
+            92% {
+                transform: translate(2px, -2px);
+                opacity: 0.9;
+            }
+
+            93% {
+                transform: translate(-2px, -2px);
+                opacity: 0.8;
+            }
+
+            94% {
+                transform: translate(0);
+                opacity: 1;
+            }
+        }
+
+        /* Marquee */
+        .marquee {
+            display: flex;
+            white-space: nowrap;
+            animation: marquee-scroll 40s linear infinite;
+        }
+
+        @keyframes marquee-scroll {
+            0% {
+                transform: translateX(0%);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Noise Texture */
+        .noise-bg {
+            position: relative;
+        }
+
+        .noise-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        /* Orbiting Badge */
+        @keyframes orbit {
+            0% {
+                transform: rotate(0deg) translateX(180px) rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg) translateX(180px) rotate(-360deg);
+            }
+        }
+
+        .orbit {
+            animation: orbit 8s linear infinite;
+        }
+
+        /* Hero Mask */
+        .hero-mask {
+            mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 70%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 70%, transparent 100%);
+        }
+
+        /* Glow Pulse */
+        .glow-pulse {
+            animation: glow-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes glow-pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+            }
+        }
+
+        /* CTA Button */
+        .cta-button {
+            position: relative;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.1));
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                0 0 30px rgba(255, 215, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            border-color: rgba(255, 215, 0, 0.6);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                0 0 50px rgba(255, 215, 0, 0.4);
+            transform: scale(1.02);
+        }
+
+        /* Chromatic Aberration */
+        .chromatic {
+            position: relative;
+        }
+
+        .chromatic::before,
+        .chromatic::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .chromatic:hover::before {
+            opacity: 0.3;
+            left: -2px;
+            color: #00FFFF;
+        }
+
+        .chromatic:hover::after {
+            opacity: 0.3;
+            left: 2px;
+            color: #FF00FF;
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .radar-scan {
+                width: 300px;
+                height: 300px;
+            }
+
+            @keyframes radar-pulse {
+                100% {
+                    width: 300px;
+                    height: 300px;
+                    opacity: 0;
+                }
+            }
         }
     </style>
 </head>
 
-<body class="antialiased selection:bg-accent-cyan selection:text-white">
+<body class="antialiased selection:bg-cyber-cyan selection:text-black">
 
-    <!-- CINEMATIC LAYERS -->
-    <div class="ambient-light"></div>
-    <div id="canvas-container" class="fixed top-0 left-0 w-full h-full -z-10 opacity-40"></div>
+    <!-- Aurora Background -->
+    <div class="aurora-bg"></div>
 
-    <!-- MAIN CONTENT -->
+    <!-- Three.js Particle Canvas -->
+    <div id="particles-canvas" class="fixed top-0 left-0 w-full h-full -z-10 opacity-30"></div>
+
+    <!-- Main Content -->
     <main class="relative z-10">
 
-        <!-- HERO SECTION -->
-        <section id="hero" class="relative w-full overflow-hidden">
+        <!-- ========================================
+             HERO SECTION - "THE KILL SHOT"
+             ======================================== -->
+        <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden px-6 lg:px-20">
 
-            <!-- MOBILE LAYOUT (< md) -->
-            <div class="flex flex-col h-[100dvh] md:hidden">
-                <!-- Top: Content (45%) -->
-                <div class="relative h-[45%] pt-24 px-6 z-30 flex flex-col justify-start">
-                    <div
-                        class="inline-block px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-6 w-fit">
-                        <span class="text-[10px] font-mono text-accent-cyan tracking-widest uppercase">Acesso Restrito
-                            // Nível 5</span>
-                    </div>
-                    <h1 class="text-4xl font-extrabold leading-tight tracking-tight text-white mb-4">
-                        VOCÊ VIROU O <br>
-                        <span class="text-gradient">REFÉM DO ALGORITMO.</span>
-                    </h1>
-                    <p class="text-gray-400 text-sm leading-relaxed max-w-xs">
-                        Eles te vendem fama. O Protocolo Dark te entrega lucro silencioso. Copie o sistema que gera 5
-                        dígitos mensais.
-                    </p>
-                </div>
-
-                <!-- Bottom: Image (55%) -->
-                <div class="relative h-[55%] w-full z-10">
-                    <img src="./assets/hero.png" alt="Mentor"
-                        class="absolute bottom-0 left-1/2 -translate-x-1/2 h-full w-auto max-w-none object-contain object-bottom hero-mask-gradient will-change-transform">
-
-                    <!-- Floating Stats Card Mobile -->
-                    <div class="absolute bottom-24 right-4 z-40 bento-card p-3 scale-90 animate-float bg-black/60">
-                        <div class="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Faturamento</div>
-                        <div class="text-lg font-mono text-green-400 font-bold">R$ <span class="counter-mobile">0</span>
-                        </div>
-                    </div>
-                </div>
+            <!-- Radar Scan Animation -->
+            <div class="radar-scan hidden md:block">
+                <div class="radar-ring"></div>
+                <div class="radar-ring"></div>
+                <div class="radar-ring"></div>
+                <div class="radar-ring"></div>
             </div>
 
-            <!-- DESKTOP LAYOUT (>= md) -->
-            <div class="hidden md:flex h-screen items-center justify-center px-20 relative">
-                <!-- Text -->
-                <div class="w-1/2 z-20 pl-20">
+            <div class="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-12 items-center relative z-10 py-20">
+
+                <!-- Left: Text Content -->
+                <div class="text-center md:text-left space-y-8">
+                    <!-- Badge -->
                     <div
-                        class="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-8">
-                        <span class="text-xs font-mono text-accent-cyan tracking-widest uppercase">Acesso Restrito //
-                            Nível 5</span>
+                        class="inline-flex items-center px-4 py-2 rounded-full border border-cyber-cyan/20 bg-cyber-cyan/5 backdrop-blur-sm">
+                        <span class="text-xs font-mono text-cyber-cyan uppercase tracking-widest">// ACESSO RESTRITO •
+                            NÍVEL 5</span>
                     </div>
-                    <h1 class="text-7xl font-extrabold leading-tight tracking-tight text-white mb-6">
-                        VOCÊ VIROU O <br>
-                        <span class="text-gradient">REFÉM DO ALGORITMO.</span>
+
+                    <!-- Headline -->
+                    <h1 class="text-6xl md:text-8xl lg:text-9xl font-black leading-none tracking-tighter">
+                        VOCÊ VIROU<br>
+                        <span class="text-gradient-white">REFÉM DO</span><br>
+                        <span class="text-gradient-cyan">ALGORITMO.</span>
                     </h1>
-                    <p class="text-gray-400 text-xl leading-relaxed max-w-lg mb-10">
-                        Eles te vendem fama. O Protocolo Dark te entrega lucro silencioso. Copie o sistema que gera 5
-                        dígitos mensais sem aparecer.
+
+                    <!-- Subheadline -->
+                    <p class="text-gray-400 text-lg md:text-xl max-w-xl leading-relaxed mx-auto md:mx-0">
+                        O sistema foi feito para você falhar. Dancinhas, exposição, escravidão.
+                        <br><br>
+                        <strong class="text-white">Protocolo Dark é a vingança.</strong> O método underground que gera 5
+                        dígitos mensais sem rosto, sem fama, sem humilhação.
                     </p>
+
+                    <!-- CTA Desktop -->
                     <a href="https://pay.cakto.com.br/xxfrxiz_663570"
-                        class="btn-glow inline-flex items-center justify-center px-8 py-4 rounded-lg text-white font-bold tracking-wide uppercase text-sm group">
-                        <span>Destravar Acesso</span>
-                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none"
+                        class="hidden md:inline-flex cta-button shine-sweep items-center justify-center px-10 py-5 rounded-2xl text-white font-bold uppercase tracking-wide text-sm group">
+                        <span class="text-gradient-gold text-lg">Destravar Protocolo Agora</span>
+                        <svg class="w-5 h-5 ml-3 group-hover:translate-x-2 transition-transform" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
@@ -275,283 +502,685 @@
                     </a>
                 </div>
 
-                <!-- Image -->
-                <div class="w-1/2 h-full relative flex items-end justify-center z-10">
-                    <img src="./assets/hero.png" alt="Mentor"
-                        class="h-[90%] object-contain object-bottom relative z-10 hero-mask-gradient">
+                <!-- Right: Hero Image + Floating Cards -->
+                <div class="relative flex items-end justify-center h-[60vh] md:h-[80vh]">
+                    <!-- Hero Image -->
+                    <img src="./assets/hero.png" alt="Operador"
+                        class="h-full w-auto object-contain object-bottom hero-mask relative z-10">
 
-                    <!-- Floating Stats Card Desktop -->
-                    <div
-                        class="absolute top-1/3 right-20 z-30 bento-card p-6 animate-float bg-black/40 border-white/10 backdrop-blur-xl">
-                        <div class="text-xs text-gray-500 uppercase tracking-wider mb-2">Faturamento Verificado</div>
-                        <div class="text-3xl font-mono text-green-400 font-bold">R$ <span id="counter-desktop">0</span>
+                    <!-- Floating Card: Active Users (Left) -->
+                    <div class="glass-card absolute top-10 left-0 md:left-10 p-4 md:p-6 float hidden md:block">
+                        <div class="text-xs text-gray-500 uppercase tracking-wider mb-2 font-mono">Usuários Ativos</div>
+                        <div class="text-4xl font-bold font-mono text-gradient-cyan">
+                            <span id="counter-users">0</span>
+                        </div>
+                        <div class="mt-3 flex items-center space-x-2">
+                            <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                            <span class="text-xs text-green-400 font-mono">LIVE</span>
                         </div>
                     </div>
+
+                    <!-- Floating Card: Revenue (Right) -->
+                    <div
+                        class="glass-card absolute bottom-10 md:bottom-20 right-0 md:right-10 p-5 md:p-7 float glow-pulse">
+                        <div class="text-xs text-gray-500 uppercase tracking-wider mb-2 font-mono">Faturamento
+                            Verificado</div>
+                        <div class="text-3xl md:text-4xl font-bold font-mono text-green-400">
+                            R$ <span id="counter-revenue">0</span>
+                        </div>
+                        <!-- Mini Graph -->
+                        <div class="mt-3 flex items-end space-x-1 h-8">
+                            <div class="w-2 bg-green-500/30 h-1/2"></div>
+                            <div class="w-2 bg-green-500/40 h-2/3"></div>
+                            <div class="w-2 bg-green-500/50 h-3/4"></div>
+                            <div class="w-2 bg-green-500/60 h-4/5"></div>
+                            <div class="w-2 bg-green-500 h-full animate-pulse"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ========================================
+             AGITATION - "THE WALL OF PAIN"
+             ======================================== -->
+        <section id="agitation" class="py-20 md:py-32 px-6 lg:px-20 relative overflow-hidden">
+
+            <!-- Ticker Tape -->
+            <div class="mb-16 overflow-hidden opacity-30">
+                <div class="marquee text-red-500 font-mono text-sm md:text-base tracking-wider">
+                    <span class="inline-block px-8">ESCRAVIDÃO • DANCINHAS • FLOP • CANCELAMENTO • EXPOSIÇÃO •
+                        HUMILHAÇÃO • ESCRAVIDÃO • DANCINHAS • FLOP • CANCELAMENTO • EXPOSIÇÃO • HUMILHAÇÃO • </span>
+                    <span class="inline-block px-8">ESCRAVIDÃO • DANCINHAS • FLOP • CANCELAMENTO • EXPOSIÇÃO •
+                        HUMILHAÇÃO • ESCRAVIDÃO • DANCINHAS • FLOP • CANCELAMENTO • EXPOSIÇÃO • HUMILHAÇÃO • </span>
                 </div>
             </div>
 
-        </section>
-
-        <!-- AGITATION SECTION (BENTO GRID) -->
-        <section id="agitation" class="py-24 px-6 lg:px-20 relative bg-void-bg">
-            <div class="max-w-6xl mx-auto">
+            <div class="max-w-7xl mx-auto">
+                <!-- Section Header -->
                 <div class="text-center mb-16">
-                    <h2 class="text-3xl lg:text-4xl font-bold text-white mb-4">A Realidade vs. O Protocolo</h2>
-                    <p class="text-gray-500">Escolha o seu jogo.</p>
+                    <h2 class="text-4xl md:text-6xl font-black mb-4 tracking-tight">
+                        A <span class="text-red-500">ARMADILHA</span> vs. A <span
+                            class="text-gradient-cyan">LIBERDADE</span>
+                    </h2>
+                    <p class="text-gray-500 font-mono uppercase tracking-widest text-sm">ESCOLHA SEU JOGO</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-auto md:h-[500px]">
+                <!-- 2x2 Bento Pain Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
 
-                    <!-- Card 1: Pain (Large Square) -->
-                    <div class="bento-card col-span-1 md:col-span-2 md:row-span-2 p-8 relative group overflow-hidden">
+                    <!-- Pain Card 1 -->
+                    <div class="glass-card p-8 md:p-10 relative overflow-hidden group noise-bg">
                         <div
-                            class="absolute inset-0 bg-gradient-to-br from-red-900/10 to-transparent opacity-50 group-hover:opacity-70 transition-opacity">
+                            class="absolute inset-0 bg-gradient-to-br from-red-900/10 to-transparent opacity-50 group-hover:opacity-80 transition-opacity">
                         </div>
-                        <div class="relative z-10 h-full flex flex-col justify-between">
-                            <div>
-                                <div
-                                    class="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center mb-6 border border-red-500/20">
-                                    <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
-                                </div>
-                                <h3 class="text-2xl font-bold text-white mb-4">A Armadilha do Influenciador</h3>
-                                <ul class="space-y-3 text-gray-400 font-mono text-sm">
-                                    <li class="flex items-center"><span
-                                            class="w-1.5 h-1.5 rounded-full bg-red-500 mr-3"></span>Postar todo dia
-                                        (Escravidão)</li>
-                                    <li class="flex items-center"><span
-                                            class="w-1.5 h-1.5 rounded-full bg-red-500 mr-3"></span>Dancinhas
-                                        (Humilhação)</li>
-                                    <li class="flex items-center"><span
-                                            class="w-1.5 h-1.5 rounded-full bg-red-500 mr-3"></span>Haters e Exposição
-                                    </li>
-                                </ul>
+                        <div class="relative z-10">
+                            <!-- Icon -->
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center mb-6 glitch">
+                                <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
                             </div>
-                            <div class="mt-8 text-red-400/50 text-sm font-mono">SYSTEM_FAILURE</div>
+                            <h3 class="text-2xl font-bold mb-4">Viralização Tóxica</h3>
+                            <ul class="space-y-3 text-gray-400 text-sm font-mono">
+                                <li class="flex items-start"><span class="text-red-500 mr-3">×</span> Postar 3x por dia
+                                    (sem vida)</li>
+                                <li class="flex items-start"><span class="text-red-500 mr-3">×</span> Dancinhas forçadas
+                                </li>
+                                <li class="flex items-start"><span class="text-red-500 mr-3">×</span> Exposição total da
+                                    família</li>
+                                <li class="flex items-start"><span class="text-red-500 mr-3">×</span> Haters diários
+                                </li>
+                            </ul>
+                            <div class="mt-6 text-red-500/50 font-mono text-xs">ERROR_SYSTEM_FAILURE</div>
                         </div>
                     </div>
 
-                    <!-- Card 2: Desire (Tall Rectangle) -->
-                    <div class="bento-card col-span-1 md:col-span-1 md:row-span-2 p-8 relative group overflow-hidden">
+                    <!-- Pain Card 2 -->
+                    <div class="glass-card p-8 md:p-10 relative overflow-hidden group noise-bg">
                         <div
-                            class="absolute inset-0 bg-gradient-to-b from-accent-cyan/10 to-transparent opacity-50 group-hover:opacity-70 transition-opacity">
+                            class="absolute inset-0 bg-gradient-to-br from-red-900/10 to-transparent opacity-50 group-hover:opacity-80 transition-opacity">
                         </div>
-                        <div class="relative z-10 h-full flex flex-col justify-between">
+                        <div class="relative z-10">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center mb-6 glitch">
+                                <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-4">Instabilidade Fatal</h3>
+                            <ul class="space-y-3 text-gray-400 text-sm font-mono">
+                                <li class="flex items-start"><span class="text-red-500 mr-3">×</span> Algoritmo
+                                    imprevisível</li>
+                                <li class="flex items-start"><span class="text-red-500 mr-3">×</span> Shadowban
+                                    aleatório</li>
+                                <li class="flex items-start"><span class="text-red-500 mr-3">×</span> Dependência da
+                                    plataforma</li>
+                                <li class="flex items-start"><span class="text-red-500 mr-3">×</span> Monetização
+                                    travada</li>
+                            </ul>
+                            <div class="mt-6 text-red-500/50 font-mono text-xs">WARNING_UNSTABLE</div>
+                        </div>
+                    </div>
+
+                    <!-- Solution Card 1 -->
+                    <div class="glass-card p-8 md:p-10 relative overflow-hidden group noise-bg border-cyber-cyan/20">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-br from-cyber-cyan/10 to-transparent opacity-50 group-hover:opacity-80 transition-opacity">
+                        </div>
+                        <div class="relative z-10">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-cyber-cyan/10 border border-cyber-cyan/30 flex items-center justify-center mb-6">
+                                <svg class="w-6 h-6 text-cyber-cyan" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-4 text-gradient-cyan">100% Anônimo</h3>
+                            <ul class="space-y-3 text-gray-300 text-sm font-mono">
+                                <li class="flex items-start"><span class="text-cyber-cyan mr-3">✓</span> Sem aparecer
+                                </li>
+                                <li class="flex items-start"><span class="text-cyber-cyan mr-3">✓</span> Sem rosto</li>
+                                <li class="flex items-start"><span class="text-cyber-cyan mr-3">✓</span> Sem exposição
+                                </li>
+                                <li class="flex items-start"><span class="text-cyber-cyan mr-3">✓</span> Privacidade
+                                    total</li>
+                            </ul>
+                            <div class="mt-6 text-cyber-cyan/50 font-mono text-xs">STATUS_PROTECTED</div>
+                        </div>
+                    </div>
+
+                    <!-- Solution Card 2 -->
+                    <div class="glass-card p-8 md:p-10 relative overflow-hidden group noise-bg border-cyber-cyan/20">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-br from-cyber-cyan/10 to-transparent opacity-50 group-hover:opacity-80 transition-opacity">
+                        </div>
+                        <div class="relative z-10">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-cyber-cyan/10 border border-cyber-cyan/30 flex items-center justify-center mb-6">
+                                <svg class="w-6 h-6 text-cyber-cyan" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-4 text-gradient-cyan">Sistema Automático</h3>
+                            <ul class="space-y-3 text-gray-300 text-sm font-mono">
+                                <li class="flex items-start"><span class="text-cyber-cyan mr-3">✓</span> Método copiável
+                                </li>
+                                <li class="flex items-start"><span class="text-cyber-cyan mr-3">✓</span> Escalável
+                                    infinito</li>
+                                <li class="flex items-start"><span class="text-cyber-cyan mr-3">✓</span> Previsível e
+                                    estável</li>
+                                <li class="flex items-start"><span class="text-cyber-cyan mr-3">✓</span> Lucro em 48h
+                                </li>
+                            </ul>
+                            <div class="mt-6 text-cyber-cyan/50 font-mono text-xs">SYSTEM_OPTIMIZED</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================
+             ARSENAL - "THE COMMAND CENTER"
+             ======================================== -->
+        <section id="arsenal" class="py-20 md:py-32 px-6 lg:px-20 relative">
+            <div class="max-w-7xl mx-auto">
+
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-6xl font-black mb-4 tracking-tight">O ARSENAL</h2>
+                    <p class="text-gray-500 font-mono uppercase tracking-widest text-sm">MÓDULOS DE COMBATE // ACESSO
+                        RESTRITO</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                    <!-- Command Widget 1 -->
+                    <div class="glass-card h-[400px] relative overflow-hidden group cursor-pointer noise-bg border-beam"
+                        data-tilt>
+                        <div
+                            class="absolute inset-0 bg-[url('./assets/1.jpg')] bg-cover bg-center opacity-40 grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700">
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent"></div>
+
+                        <!-- Hover Glitch Overlay -->
+                        <div
+                            class="absolute inset-0 bg-cyber-cyan/5 opacity-0 group-hover:opacity-100 transition-opacity glitch">
+                        </div>
+
+                        <div class="absolute bottom-0 left-0 p-6 w-full z-10">
+                            <div class="flex items-center space-x-2 mb-3">
+                                <div class="w-2 h-2 rounded-full bg-cyber-cyan animate-pulse"></div>
+                                <span class="text-cyber-cyan font-mono text-xs uppercase tracking-widest">MÓDULO
+                                    01</span>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-2 chromatic" data-text="O Briefing">O Briefing</h3>
+                            <p class="text-gray-400 text-xs font-mono">Decodificando o terreno</p>
+                        </div>
+
+                        <!-- Chromatic Edge -->
+                        <div
+                            class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyber-cyan to-transparent opacity-0 group-hover:opacity-60 transition-opacity">
+                        </div>
+                    </div>
+
+                    <!-- Command Widget 2 -->
+                    <div class="glass-card h-[400px] relative overflow-hidden group cursor-pointer noise-bg border-beam"
+                        data-tilt>
+                        <div
+                            class="absolute inset-0 bg-[url('./assets/2.jpg')] bg-cover bg-center opacity-40 grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700">
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent"></div>
+                        <div
+                            class="absolute inset-0 bg-cyber-cyan/5 opacity-0 group-hover:opacity-100 transition-opacity glitch">
+                        </div>
+
+                        <div class="absolute bottom-0 left-0 p-6 w-full z-10">
+                            <div class="flex items-center space-x-2 mb-3">
+                                <div class="w-2 h-2 rounded-full bg-cyber-cyan animate-pulse"></div>
+                                <span class="text-cyber-cyan font-mono text-xs uppercase tracking-widest">MÓDULO
+                                    02</span>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-2 chromatic" data-text="O Arsenal">O Arsenal</h3>
+                            <p class="text-gray-400 text-xs font-mono">Munição algorítmica</p>
+                        </div>
+
+                        <div
+                            class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyber-cyan to-transparent opacity-0 group-hover:opacity-60 transition-opacity">
+                        </div>
+                    </div>
+
+                    <!-- Command Widget 3 -->
+                    <div class="glass-card h-[400px] relative overflow-hidden group cursor-pointer noise-bg border-beam"
+                        data-tilt>
+                        <div
+                            class="absolute inset-0 bg-[url('./assets/3.jpg')] bg-cover bg-center opacity-40 grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700">
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent"></div>
+                        <div
+                            class="absolute inset-0 bg-cyber-cyan/5 opacity-0 group-hover:opacity-100 transition-opacity glitch">
+                        </div>
+
+                        <div class="absolute bottom-0 left-0 p-6 w-full z-10">
+                            <div class="flex items-center space-x-2 mb-3">
+                                <div class="w-2 h-2 rounded-full bg-cyber-cyan animate-pulse"></div>
+                                <span class="text-cyber-cyan font-mono text-xs uppercase tracking-widest">MÓDULO
+                                    03</span>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-2 chromatic" data-text="O Mecanismo">O Mecanismo</h3>
+                            <p class="text-gray-400 text-xs font-mono">A máquina de lucro</p>
+                        </div>
+
+                        <div
+                            class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyber-cyan to-transparent opacity-0 group-hover:opacity-60 transition-opacity">
+                        </div>
+                    </div>
+
+                    <!-- Command Widget 4 -->
+                    <div class="glass-card h-[400px] relative overflow-hidden group cursor-pointer noise-bg border-beam"
+                        data-tilt>
+                        <div
+                            class="absolute inset-0 bg-[url('./assets/4.jpg')] bg-cover bg-center opacity-40 grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700">
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent"></div>
+                        <div
+                            class="absolute inset-0 bg-cyber-cyan/5 opacity-0 group-hover:opacity-100 transition-opacity glitch">
+                        </div>
+
+                        <div class="absolute bottom-0 left-0 p-6 w-full z-10">
+                            <div class="flex items-center space-x-2 mb-3">
+                                <div class="w-2 h-2 rounded-full bg-gold animate-pulse"></div>
+                                <span class="text-gold font-mono text-xs uppercase tracking-widest">BÔNUS
+                                    EXCLUSIVO</span>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-2 chromatic" data-text="Ferramentas IA">Ferramentas IA</h3>
+                            <p class="text-gray-400 text-xs font-mono">Automação total</p>
+                        </div>
+
+                        <div
+                            class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold to-transparent opacity-0 group-hover:opacity-60 transition-opacity">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================
+             OFFER - "THE MONEY PRINTER"
+             ======================================== -->
+        <section id="offer" class="py-20 md:py-40 px-6 lg:px-20 relative">
+            <div class="max-w-4xl mx-auto">
+
+                <!-- Orbiting Container -->
+                <div class="relative">
+
+                    <!-- Orbiting Badge -->
+                    <div
+                        class="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none">
+                        <div class="orbit absolute top-1/2 left-1/2">
+                            <div class="px-4 py-2 rounded-full bg-gold/20 border-2 border-gold backdrop-blur-sm">
+                                <span class="text-gold font-bold text-xs uppercase tracking-wider">BEST VALUE</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Offer Card -->
+                    <div class="glass-card p-10 md:p-16 relative overflow-hidden border-beam border-gold/20 glow-pulse">
+
+                        <!-- Noise Texture -->
+                        <div class="absolute inset-0 opacity-5 pointer-events-none">
+                            <div
+                                class="w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGQ9Ik0wIDBoMzAwdjMwMEgweiIgZmlsdGVyPSJ1cmwoI2EpIiBvcGFjaXR5PSIuMDUiLz48L3N2Zz4=')]">
+                            </div>
+                        </div>
+
+                        <!-- Neon Streak -->
+                        <div
+                            class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold to-transparent">
+                        </div>
+
+                        <div class="relative z-10 text-center space-y-8">
+
+                            <!-- Header -->
                             <div>
-                                <div
-                                    class="w-10 h-10 rounded-full bg-accent-cyan/10 flex items-center justify-center mb-6 border border-accent-cyan/20">
-                                    <svg class="w-5 h-5 text-accent-cyan" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
+                                <h2 class="text-3xl md:text-5xl font-black mb-3 tracking-tight">
+                                    PLANO VITALÍCIO: <span class="text-gradient-gold">OPERADOR</span>
+                                </h2>
+                                <p class="text-gray-500 uppercase font-mono text-xs tracking-widest">OFERTA POR TEMPO
+                                    LIMITADO</p>
+                            </div>
+
+                            <!-- Benefits List (Dense) -->
+                            <div class="grid md:grid-cols-2 gap-3 text-left max-w-2xl mx-auto">
+                                <div class="flex items-start space-x-2 text-sm">
+                                    <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M5 13l4 4L19 7"></path>
                                     </svg>
+                                    <span class="text-gray-300">Protocolo Dark completo</span>
                                 </div>
-                                <h3 class="text-2xl font-bold text-white mb-4">O Protocolo</h3>
-                                <ul class="space-y-3 text-gray-400 font-mono text-sm">
-                                    <li class="flex items-center"><span
-                                            class="w-1.5 h-1.5 rounded-full bg-accent-cyan mr-3"></span>100% Anônimo
-                                    </li>
-                                    <li class="flex items-center"><span
-                                            class="w-1.5 h-1.5 rounded-full bg-accent-cyan mr-3"></span>Automático</li>
-                                    <li class="flex items-center"><span
-                                            class="w-1.5 h-1.5 rounded-full bg-accent-cyan mr-3"></span>Escalável</li>
-                                </ul>
+                                <div class="flex items-start space-x-2 text-sm">
+                                    <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span class="text-gray-300">3 Módulos de combate</span>
+                                </div>
+                                <div class="flex items-start space-x-2 text-sm">
+                                    <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span class="text-gray-300">Briefing estratégico</span>
+                                </div>
+                                <div class="flex items-start space-x-2 text-sm">
+                                    <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span class="text-gray-300">Arsenal de ferramentas IA</span>
+                                </div>
+                                <div class="flex items-start space-x-2 text-sm">
+                                    <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span class="text-gray-300">Mecanismo de lucro</span>
+                                </div>
+                                <div class="flex items-start space-x-2 text-sm">
+                                    <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span class="text-gray-300">100% anônimo</span>
+                                </div>
+                                <div class="flex items-start space-x-2 text-sm">
+                                    <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span class="text-gray-300">Sem aparecer na câmera</span>
+                                </div>
+                                <div class="flex items-start space-x-2 text-sm">
+                                    <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span class="text-gray-300">Método copiável</span>
+                                </div>
+                                <div class="flex items-start space-x-2 text-sm">
+                                    <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span class="text-gray-300">Escalável infinito</span>
+                                </div>
+                                <div class="flex items-start space-x-2 text-sm">
+                                    <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span class="text-gray-300">Suporte 24/7</span>
+                                </div>
+                                <div class="flex items-start space-x-2 text-sm">
+                                    <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span class="text-gray-300">Atualizações vitalícias</span>
+                                </div>
+                                <div class="flex items-start space-x-2 text-sm">
+                                    <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span class="text-gray-300">Comunidade exclusiva</span>
+                                </div>
+                                <div class="flex items-start space-x-2 text-sm">
+                                    <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span class="text-gray-300">Acesso imediato</span>
+                                </div>
+                                <div class="flex items-start space-x-2 text-sm">
+                                    <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span class="text-gray-300">Garantia de 7 dias</span>
+                                </div>
                             </div>
-                            <div class="mt-8 text-accent-cyan/50 text-sm font-mono">SYSTEM_OPTIMIZED</div>
+
+                            <!-- Price -->
+                            <div>
+                                <div class="text-gray-500 line-through text-xl font-mono mb-2">DE R$ 147,00</div>
+                                <div
+                                    class="text-gradient-gold text-6xl md:text-7xl font-black tracking-tighter mb-2 glow-pulse">
+                                    R$ 27,00
+                                </div>
+                                <p class="text-gold/70 font-mono text-sm uppercase tracking-wider">Pagamento único •
+                                    Acesso vitalício</p>
+                            </div>
+
+                            <!-- CTA Button -->
+                            <a href="https://pay.cakto.com.br/xxfrxiz_663570"
+                                class="cta-button shine-sweep inline-flex items-center justify-center w-full md:w-auto px-12 md:px-16 py-6 rounded-2xl text-white font-black uppercase tracking-wider text-base md:text-lg group">
+                                <span class="text-gradient-gold">DESTRAVAR MEU ACESSO AGORA</span>
+                                <svg class="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                        d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                                </svg>
+                            </a>
+
+                            <!-- Trust Badges -->
+                            <div class="flex flex-wrap justify-center gap-6 text-gray-500 text-xs font-mono pt-6">
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                                        </path>
+                                    </svg>
+                                    <span>Garantia 7 Dias</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                                        </path>
+                                    </svg>
+                                    <span>Pagamento Seguro</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                    <span>Acesso Instantâneo</span>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
-
                 </div>
+
             </div>
         </section>
 
-        <!-- ARSENAL SECTION (MODULES) -->
-        <section id="arsenal" class="py-24 px-6 lg:px-20 relative">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl lg:text-4xl font-bold text-white mb-4">O Arsenal</h2>
-                <p class="text-gray-500 font-mono text-sm tracking-widest">MÓDULOS DE COMBATE</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-                <!-- Module 1 -->
-                <div class="bento-card h-[350px] group cursor-pointer" data-tilt>
-                    <div
-                        class="absolute inset-0 bg-[url('./assets/1.jpg')] bg-cover bg-center opacity-60 grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700">
-                    </div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-                    <div class="absolute bottom-0 left-0 p-6 w-full">
-                        <div class="text-accent-cyan font-mono text-xs mb-2">MÓDULO 01</div>
-                        <h3 class="text-xl font-bold text-white">O Briefing</h3>
-                    </div>
-                </div>
-                <!-- Module 2 -->
-                <div class="bento-card h-[350px] group cursor-pointer" data-tilt>
-                    <div
-                        class="absolute inset-0 bg-[url('./assets/2.jpg')] bg-cover bg-center opacity-60 grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700">
-                    </div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-                    <div class="absolute bottom-0 left-0 p-6 w-full">
-                        <div class="text-accent-cyan font-mono text-xs mb-2">MÓDULO 02</div>
-                        <h3 class="text-xl font-bold text-white">O Arsenal</h3>
-                    </div>
-                </div>
-                <!-- Module 3 -->
-                <div class="bento-card h-[350px] group cursor-pointer" data-tilt>
-                    <div
-                        class="absolute inset-0 bg-[url('./assets/3.jpg')] bg-cover bg-center opacity-60 grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700">
-                    </div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-                    <div class="absolute bottom-0 left-0 p-6 w-full">
-                        <div class="text-accent-cyan font-mono text-xs mb-2">MÓDULO 03</div>
-                        <h3 class="text-xl font-bold text-white">O Mecanismo</h3>
-                    </div>
-                </div>
-                <!-- Module 4 -->
-                <div class="bento-card h-[350px] group cursor-pointer" data-tilt>
-                    <div
-                        class="absolute inset-0 bg-[url('./assets/4.jpg')] bg-cover bg-center opacity-60 grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700">
-                    </div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-                    <div class="absolute bottom-0 left-0 p-6 w-full">
-                        <div class="text-accent-cyan font-mono text-xs mb-2">BÔNUS</div>
-                        <h3 class="text-xl font-bold text-white">Ferramentas IA</h3>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- OFFER SECTION (VAULT) -->
-        <section id="offer" class="py-32 px-6 lg:px-20 relative flex justify-center pb-48 md:pb-32">
-            <div
-                class="relative w-full max-w-2xl bento-card p-10 lg:p-16 overflow-hidden text-center border-white/10 bg-black/40">
-
-                <h2 class="text-3xl lg:text-4xl font-bold text-white mb-2">Acesso ao Cofre</h2>
-                <p class="text-gray-500 mb-10 font-mono text-sm">OFERTA POR TEMPO LIMITADO</p>
-
-                <div class="mb-10">
-                    <div class="text-gray-500 line-through text-lg font-mono mb-2">DE R$ 147,00</div>
-                    <div class="text-gradient-gold text-6xl lg:text-7xl font-extrabold tracking-tight">R$ 27,00</div>
-                </div>
-
-                <a href="https://pay.cakto.com.br/xxfrxiz_663570"
-                    class="btn-glow shine-effect block w-full py-5 text-lg font-bold uppercase tracking-widest text-white rounded-xl mb-8 hover:scale-[1.02] transition-transform">
-                    Destravar Meu Acesso
-                </a>
-
-                <div class="flex flex-wrap justify-center gap-4 text-gray-500 text-xs font-mono">
-                    <div class="flex items-center"><svg class="w-4 h-4 mr-1.5 text-green-500" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
-                            </path>
-                        </svg> 7-Day Guarantee</div>
-                    <div class="flex items-center"><svg class="w-4 h-4 mr-1.5 text-green-500" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
-                            </path>
-                        </svg> SSL Secure</div>
-                    <div class="flex items-center"><svg class="w-4 h-4 mr-1.5 text-green-500" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                        </svg> Instant Access</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- FOOTER -->
-        <footer class="py-10 text-center text-gray-600 text-xs font-mono">
-            <p>&copy; 2025 PROTOCOLO DARK. TODOS OS DIREITOS RESERVADOS.</p>
+        <!-- Footer -->
+        <footer class="py-12 text-center text-gray-600 text-xs font-mono pb-24 md:pb-12">
+            <p>© 2025 PROTOCOLO DARK. TODOS OS DIREITOS RESERVADOS.</p>
+            <p class="mt-2 text-gray-700">OPERAÇÃO UNDERGROUND // NÍVEL 5 // ACESSO RESTRITO</p>
         </footer>
 
     </main>
 
-    <!-- FLOATING DOCK CTA (MOBILE) -->
-    <div class="floating-dock fixed bottom-0 left-0 w-full p-4 z-50 md:hidden">
+    <!-- Mobile Floating CTA -->
+    <div class="fixed bottom-0 left-0 w-full p-4 z-50 md:hidden"
+        style="background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(20px); border-top: 1px solid rgba(255, 215, 0, 0.2);">
         <a href="https://pay.cakto.com.br/xxfrxiz_663570"
-            class="btn-glow block w-full py-4 text-center font-bold uppercase tracking-widest text-white rounded-lg text-sm">
-            Destravar Acesso - R$ 27,00
+            class="cta-button shine-sweep flex items-center justify-center w-full py-4 rounded-xl text-white font-bold uppercase tracking-wide text-sm">
+            <span class="text-gradient-gold">Destravar - R$ 27,00</span>
         </a>
     </div>
 
-    <!-- SCRIPTS -->
+    <!-- Scripts -->
     <script>
-        // --- 1. INIT & ANIMATIONS ---
+        // ========================================
+        // GSAP INIT
+        // ========================================
         gsap.registerPlugin(ScrollTrigger);
 
-        // Hero Reveal
-        gsap.from("h1, p, .btn-glow", {
-            y: 30,
+        // Hero entrance
+        gsap.from("#hero h1", {
+            y: 50,
             opacity: 0,
-            duration: 1,
-            stagger: 0.1,
-            ease: "power3.out",
+            duration: 1.2,
+            ease: "power4.out",
             delay: 0.2
         });
 
-        // Bento Cards Reveal
-        gsap.utils.toArray('.bento-card').forEach((card, i) => {
+        gsap.from("#hero p", {
+            y: 30,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out",
+            delay: 0.4
+        });
+
+        gsap.from("#hero .cta-button", {
+            y: 30,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out",
+            delay: 0.6
+        });
+
+        gsap.from("#hero .glass-card", {
+            scale: 0.8,
+            opacity: 0,
+            duration: 1,
+            ease: "back.out(1.7)",
+            delay: 0.8,
+            stagger: 0.2
+        });
+
+        // Stagger bento cards
+        gsap.utils.toArray('.glass-card').forEach((card, i) => {
             gsap.from(card, {
-                y: 50,
+                y: 60,
                 opacity: 0,
-                duration: 0.8,
+                duration: 1,
                 ease: "power3.out",
                 scrollTrigger: {
                     trigger: card,
-                    start: "top 85%"
+                    start: "top 90%",
+                    toggleActions: "play none none none"
                 }
             });
         });
 
-        // --- 2. COUNTER ---
-        function animateCounter(id, endVal) {
+        // Hero image parallax
+        gsap.to("#hero img", {
+            yPercent: -10,
+            ease: "none",
+            scrollTrigger: {
+                trigger: "#hero",
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            }
+        });
+
+        // ========================================
+        // COUNTERS
+        // ========================================
+        function animateCounter(selector, endValue, formatter = (v) => v.toLocaleString('pt-BR')) {
+            const element = document.querySelector(selector);
+            if (!element) return;
+
             const obj = { val: 0 };
             gsap.to(obj, {
-                val: endVal,
+                val: endValue,
                 duration: 2.5,
                 ease: "power2.out",
                 onUpdate: () => {
-                    const el = document.getElementById(id) || document.querySelector(id);
-                    if (el) el.innerText = Math.floor(obj.val).toLocaleString('pt-BR');
+                    element.textContent = formatter(Math.floor(obj.val));
+                },
+                scrollTrigger: {
+                    trigger: element,
+                    start: "top 80%",
+                    toggleActions: "play none none none"
                 }
             });
         }
-        animateCounter('#counter-desktop', 350000);
-        animateCounter('.counter-mobile', 350000);
 
-        // --- 3. THREE.JS PARTICLES (SPARSE DUST) ---
+        animateCounter('#counter-users', 1420);
+        animateCounter('#counter-revenue', 350000, (v) => v.toLocaleString('pt-BR'));
+
+        // ========================================
+        // THREE.JS PARTICLES
+        // ========================================
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById('canvas-container').appendChild(renderer.domElement);
+        document.getElementById('particles-canvas').appendChild(renderer.domElement);
 
+        const particleCount = 500;
         const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 400; // Sparse
-        const posArray = new Float32Array(particlesCount * 3);
+        const positions = new Float32Array(particleCount * 3);
 
-        for (let i = 0; i < particlesCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 20;
+        for (let i = 0; i < particleCount * 3; i++) {
+            positions[i] = (Math.random() - 0.5) * 30;
         }
 
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
         const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.03,
-            color: 0x444444, // Subtle grey
+            size: 0.04,
+            color: 0x00FFFF,
             transparent: true,
-            opacity: 0.4
+            opacity: 0.4,
+            blending: THREE.AdditiveBlending
         });
 
         const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
         scene.add(particlesMesh);
-        camera.position.z = 5;
+
+        camera.position.z = 8;
 
         function animateParticles() {
             requestAnimationFrame(animateParticles);
-            particlesMesh.rotation.y += 0.0005; // Very slow
+            particlesMesh.rotation.y += 0.0003;
+            particlesMesh.rotation.x += 0.0001;
             renderer.render(scene, camera);
         }
         animateParticles();
@@ -562,16 +1191,19 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // --- 4. VANILLA TILT ---
+        // ========================================
+        // VANILLA TILT
+        // ========================================
         VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
-            max: 5,
-            speed: 400,
+            max: 6,
+            speed: 500,
             glare: true,
-            "max-glare": 0.2,
-            scale: 1.02
+            "max-glare": 0.3,
+            scale: 1.03
         });
 
     </script>
+
 </body>
 
 </html>
